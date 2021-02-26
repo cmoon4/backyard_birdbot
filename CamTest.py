@@ -30,6 +30,7 @@ from PIL import ImageOps
 # For measuring the inference time.
 import time
 
+# Added some comments for git test
 # Print Tensorflow version
 print(tf.__version__)
 
