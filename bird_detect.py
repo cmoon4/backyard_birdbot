@@ -41,7 +41,8 @@ while True:
         score_B=[]
         box_B=[]
         
-        # Loop through the results and see if any are "Birds" and if there are, store them in to the empty arrays
+        # Loop through the results and see if any are "Birds" 
+        # and if there are, store them in to the empty arrays
         for name, score, box in zip(result['detection_class_entities'], result['detection_scores'], result['detection_boxes']):
             if name=='Bird':
                 if score>=minThresh:
