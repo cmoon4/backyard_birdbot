@@ -10,10 +10,16 @@ import tensorflow as tf
 import tensorflow_hub as hub
 import cv2 as cv
 
-print('Loading detection model...')
+print('Loading detection/classification models...')
+# for the main image detection model
 module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
 detector = hub.load(module_handle).signatures['default']
-print('Model loaded!')
+
+# for the secondary bird classification model
+module_b_handle="https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1"
+detector_b=hub.load(module_handle).signatures['default']
+
+print('Models loaded!')
 
 
 # Wait a millisecond
