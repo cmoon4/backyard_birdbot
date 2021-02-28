@@ -187,7 +187,7 @@ while True:
         cropped = frame[minY:maxY, minX:maxX]
         #print("Image Acquired")
         frame = cv.cvtColor(cropped, cv.COLOR_BGR2RGB)
-        #display_image(frame)
+        display_image(frame)
         # Convert the frame into a format tensorflow likes
         converted_img  = tf.image.convert_image_dtype(frame, tf.float32)[tf.newaxis, ...]
         #channels = tf.unstack (converted_img, axis=-1)
@@ -211,7 +211,7 @@ while True:
         score_l=[]
         # if any birds were found
         num_bird=np.size(result_bird["names"])
-        print(num_bird)
+        #print(num_bird)
         #display_image(frame)
         # just for plotting 
         if False:
