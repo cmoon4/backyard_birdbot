@@ -164,11 +164,12 @@ api = tweepy.API(auth)
 key=cv.waitKey(1)
 # Use the front webcam
 webcam = cv.VideoCapture(1)
-webcam.set(cv.CAP_PROP_FRAME_WIDTH, 1920)
-webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1080)
+webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
+webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
 # minimum score for the model to register it as a bird
-minThresh=0.15
-minIdentThresh=0.15
+minThresh=0.1
+minIdentThresh=0.1
+counter=0
 while True:
     try:
         # Acquire the image from the webcam
@@ -179,15 +180,15 @@ while True:
         scale=25
         #prepare the crop
         centerX,centerY=int(height/2),int(width/2)
-        radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+        radiusX,radiusY= int(scale*height/100),int(scale*width/130)
         
         minX,maxX=centerX-radiusX,centerX+radiusX
         minY,maxY=centerY-radiusY,centerY+radiusY
         
-        cropped = frame[minY:maxY, minX:maxX]
+        cropped = frame[minX:maxX, minY:maxY]
         #print("Image Acquired")
         frame = cv.cvtColor(cropped, cv.COLOR_BGR2RGB)
-        display_image(frame)
+        #display_image(frame)
         # Convert the frame into a format tensorflow likes
         converted_img  = tf.image.convert_image_dtype(frame, tf.float32)[tf.newaxis, ...]
         #channels = tf.unstack (converted_img, axis=-1)
@@ -266,7 +267,7 @@ while True:
                     # display_image_title(np.squeeze(input_img.numpy()),temp_str)
             # if any birds were detected and successfully identified:
                 
-            if len(ident_l)>1:     
+            if len(ident_l)>0:     
                 # save the captured frame first
                 bird_img_filename="captured_frame.jpg"
                 frame_bgr=cv.cvtColor(frame,cv.COLOR_RGB2BGR)
@@ -274,10 +275,10 @@ while True:
                 
                 # if a single bird was found
                 if num_bird==1:
-                    str_1="I have found a bird! I think it's "
+                    str_1="I have found a bird! I think it's"
                     str_2=an_or_a(ident_l[0])
-                    combined_str="{} {} {}({})%".format(str_1,str_2,*ident_l,str(*score_l))
-                    
+                    combined_str="{} {} {} ({}%)".format(str_1,str_2,*ident_l,str(*score_l))
+                    print(combined_str)
                 # if multiple birds were found
                 else:
                     str_1="I have found"
@@ -287,11 +288,12 @@ while True:
                     for bird_index in range(num_bird):
                         bird_species_str=ident_l[bird_index]
                         bird_score_str=str(score_l[bird_index])
-                        out_string="{}({}%)".format(bird_species_str,bird_score_str)
+                        out_string="{} ({}%)".format(bird_species_str,bird_score_str)
                         bird_out_string.append(out_string)
                     separator=", "
                     combined_str="{} {} {} {}".format(str_1,str_2,str_3,separator.join(bird_out_string))
-                
+                    print(combined_str)
+                    
                 img_upload_paths=[bird_img_filename]
                 img_upload_paths.extend(["Cropped_Bird_{}.jpg".format(i) for i in range(num_bird)])
                 img_ids=[api.media_upload(i).media_id_string for i in img_upload_paths]
@@ -304,10 +306,11 @@ while True:
                 key=cv.waitKey(60000)
             else:
                 print("Bird detected but no species identification.")
-        
-            
+                fail_file_name="dud_{}.jpg".format(str(counter))
+                cv.imwrite(fail_file_name,cv.cvtColor(frame,cv.COLOR_RGB2BGR))
+                counter=counter+1
         # wait 0.1 seconds and loop again
-        key=cv.waitKey(10)
+        #key=cv.waitKey(10)
         
     except(KeyboardInterrupt):
         print("Turning off camera.")
