@@ -153,9 +153,30 @@ This cell is where everything happens. The content inside the `while` loop will 
         minY,maxY=centerY-radiusY,centerY+radiusY
         
         cropped = frame[minY:maxY, minX:maxX]
-        #print("Image Acquired")
         frame = cv.cvtColor(cropped, cv.COLOR_BGR2RGB)
-        #display_image(frame)
         # Convert the frame into a format tensorflow likes
         converted_img  = tf.image.convert_image_dtype(frame, tf.float32)[tf.newaxis, ...]
+```
+We first use `.read` to get an image from the webcam and crop the image (so that only the birdfeeder is in view). For some reason, cv2 uses BGR instead of RGB, so the color channels are reversed as well. It is then converted into an input format that TensorFlow models use.
+
+```python
+        # Run the image through the model
+        result = detector(converted_img)
+        
+        # create empty dict 
+        result_bird={"names":[],"scores":[],"boxes":[]}
+        # Loop through the results and see if any are "Birds" 
+        # and if there are, store them in to the empty dictionary
+        for name, score, box in zip(result['detection_class_entities'], result['detection_scores'], result['detection_boxes']):
+            if name=='Bird':
+                if score>=minThresh:
+                    result_bird["names"].append(name)
+                    result_bird["scores"].append(score)
+                    result_bird["boxes"].append(box)
+        
+        # create empty lists that will contain the name and the score for bird species identification
+        ident_l=[]
+        score_l=[]
+        # if any birds were found
+        num_bird=np.size(result_bird["names"])
 ```
