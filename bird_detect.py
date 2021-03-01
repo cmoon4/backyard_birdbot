@@ -23,9 +23,10 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageOps
 
-# <codecell> Helper functions
+# <codecell> Helper functions (Not all are used, this section could be cleaned up)
 
 def im_box_crop(img,box):
+    # a function to crop an image using the normalized coordinates indicated by box output from the object detection model.
     im_height, im_width = img.shape[0], img.shape[1]
     ymin  = box[0]
     xmin  = box[1]
@@ -37,6 +38,7 @@ def im_box_crop(img,box):
     return img_crop
     
 def an_or_a(string):
+    # a function to determine if the bird name should be prefaced with "a" or "an". Inspired by MIT course 6.0001 material (https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/)
     an_letters="aefhilmnorsxAEFHILMNORSX"
     char=string[0]
     if char in an_letters:
@@ -45,6 +47,7 @@ def an_or_a(string):
         output="a"
     return output
 
+# Below are helper functions directly from or inspired by Tensorflow Object Detection API.
 def display_image(image):
     fig = plt.figure(figsize=(20,15))
     plt.grid(False)
@@ -277,8 +280,13 @@ while True:
                 if num_bird==1:
                     str_1="I have found a bird! I think it's"
                     str_2=an_or_a(ident_l[0])
+<<<<<<< HEAD
                     combined_str="{} {} {} ({}%)".format(str_1,str_2,*ident_l,str(*score_l))
                     print(combined_str)
+=======
+                    combined_str="{} {} {} ({})%".format(str_1,str_2,*ident_l,str(*score_l))
+                    
+>>>>>>> e172eda7c1921df06c188dbe88b9cbf13dd32d45
                 # if multiple birds were found
                 else:
                     str_1="I have found"
