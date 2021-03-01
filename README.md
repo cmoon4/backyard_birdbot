@@ -58,3 +58,24 @@ def an_or_a(string):
 .
 .
 ```
+
+We then need to load the actual models themselves, and initialize the Twitter API through tweepy so that we can post
+```
+# <codecell> Load models
+print('Loading detection/classification models...')
+# for the main image detection model
+#module_handle = "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
+module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
+
+detector = hub.load(module_handle).signatures['default']
+
+# for the secondary bird classification model
+module_b_handle="https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1"
+detector_b=hub.load(module_b_handle).signatures['default']
+
+# we also need to load the labelmap that will correlate the output to the actual
+# species name.
+df_bird=pd.read_csv('aiy_birds_V1_labelmap_amended.csv')
+print('Models loaded!')
+```
+
