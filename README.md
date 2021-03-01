@@ -137,7 +137,9 @@ while True:
         .
 webcam.release()        
 ```
-This cell is where everything happens. The content inside the `while` loop will be explanined further below, but first we initialize our webcam and set the resolution via cv2. The first part within that `while` loop is for acquiring and preparing the image input:
+This cell is where everything happens. The content inside the `while` loop will be explanined further below, but first we initialize our webcam and set the resolution via cv2. 
+
+The first part within that `while` loop is for acquiring and preparing the image input:
 ```python
         #Acquire the image from the webcam
         check, frame = webcam.read()
@@ -180,3 +182,21 @@ We first use `.read` to get an image from the webcam and crop the image (so that
         # if any birds were found
         num_bird=np.size(result_bird["names"])
 ```
+The converted image is first run through the object detection model. If any of the identified objects are "Bird" and have a score above the set threshold, it gets added into an empty dict object. I'm positive there is a more efficient and cleaner way to do this via filtering the result dict, but this works.
+
+```python
+        if num_bird>0:
+            # squish the dictionary to a more useful format
+            result_bird={"names":tf.concat(axis=0,values=result_bird["names"]),\
+                             "scores":tf.concat(axis=0,values=result_bird["scores"]),\
+                             "boxes":tf.stack(result_bird["boxes"],axis=0.5)}    
+            
+            # indices that will be used for image cropping (essentially an array of zeros)    
+            box_indices=tf.zeros(shape=(num_bird,),dtype=tf.int32)   
+            
+            # crop the image into the different boxes where birds were detected
+            cropped_img=tf.image.crop_and_resize(converted_img,result_bird["boxes"],box_indices,[224,224])
+```
+
+If any birds are detected (`num_bird>0`), we crop the acquired image into boxes where the object detection model thinks "Bird"s are. These cropped images (which need to be 224x224) are then used as inputs to the bird species model.
+
