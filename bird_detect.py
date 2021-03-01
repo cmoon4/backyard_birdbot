@@ -23,9 +23,10 @@ from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageOps
 
-# <codecell> Helper functions
+# <codecell> Helper functions (Not all are used, this section could be cleaned up)
 
 def im_box_crop(img,box):
+    # a function to crop an image using the normalized coordinates indicated by box output from the object detection model.
     im_height, im_width = img.shape[0], img.shape[1]
     ymin  = box[0]
     xmin  = box[1]
@@ -37,6 +38,7 @@ def im_box_crop(img,box):
     return img_crop
     
 def an_or_a(string):
+    # a function to determine if the bird name should be prefaced with "a" or "an". Inspired by MIT course 6.0001 material (https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/)
     an_letters="aefhilmnorsxAEFHILMNORSX"
     char=string[0]
     if char in an_letters:
@@ -45,6 +47,7 @@ def an_or_a(string):
         output="a"
     return output
 
+# Below are helper functions directly from or inspired by Tensorflow Object Detection API.
 def display_image(image):
     fig = plt.figure(figsize=(20,15))
     plt.grid(False)
