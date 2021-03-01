@@ -1,4 +1,4 @@
-# bird_vision
+# Backyard Birdbot
 ## Introduction
 This is a silly hobby project to use existing ML models to:
   1. Detect any birds sighted by a webcam
