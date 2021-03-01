@@ -204,7 +204,7 @@ The converted image is first run through the object detection model. If any of t
 If any birds are detected (`num_bird>0`), we crop the acquired image into boxes where the object detection model thinks "Bird"s are. These cropped images (which need to be 224x224) are then used as inputs to the bird species model.
 
 ```python
-            img_crop=[]
+          img_crop=[]
             # for each cropped box,
             for image_index in range(num_bird):
                 # reshape the image into the input format the classification model wants
