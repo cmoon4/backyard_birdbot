@@ -232,4 +232,56 @@ If any birds are detected (`num_bird>0`), we crop the acquired image into boxes 
                     ident_l.append(out_string)
                     score_l.append(out_score)
 ```
+For each detected "Bird", the cropped image is put through the species identifier. Then the model's most likely answer is chosen if its probability exceeds the threshold set earlier. We also crop a new image of the bird (not resized to 224x224) so that we can add it to our post.
 
+```python
+            if len(ident_l)>1:     
+                # save the captured frame first
+                bird_img_filename="captured_frame.jpg"
+                frame_bgr=cv.cvtColor(frame,cv.COLOR_RGB2BGR)
+                cv.imwrite(bird_img_filename,frame_bgr)
+                
+                # if a single bird was found
+                if num_bird==1:
+                    str_1="I have found a bird! I think it's "
+                    str_2=an_or_a(ident_l[0])
+                    combined_str="{} {} {} ({})%".format(str_1,str_2,*ident_l,str(*score_l))
+                    
+                # if multiple birds were found
+                else:
+                    str_1="I have found"
+                    str_2=str(num_bird)
+                    str_3="birds! I think they are:"
+                    bird_out_string=[]
+                    for bird_index in range(num_bird):
+                        bird_species_str=ident_l[bird_index]
+                        bird_score_str=str(score_l[bird_index])
+                        out_string="{} ({}%)".format(bird_species_str,bird_score_str)
+                        bird_out_string.append(out_string)
+                    separator=", "
+                    combined_str="{} {} {} {}".format(str_1,str_2,str_3,separator.join(bird_out_string))
+                
+                img_upload_paths=[bird_img_filename]
+                img_upload_paths.extend(["Cropped_Bird_{}.jpg".format(i) for i in range(num_bird)])
+                img_ids=[api.media_upload(i).media_id_string for i in img_upload_paths]
+                api.update_status(status=combined_str,media_ids=img_ids)
+                
+                for i in range(len(img_upload_paths)):
+                    os.remove(img_upload_paths[i])
+                
+                print("Tweet posted! Waiting for 1 minute")
+                key=cv.waitKey(60000)
+            else:
+                print("Bird detected but no species identification.")
+        
+            
+        # wait 0.1 seconds and loop again
+        key=cv.waitKey(10)
+        
+    except(KeyboardInterrupt):
+        print("Turning off camera.")
+        print("Camera off.")
+        print("Program ended.")
+        break    
+```
+If any species were successfully identified, the text of the tweet is prepared depending on if a single bird or multiple birds were detected. The images (the entire frame captured by the webcam, and individual crops of where birds are) uploaded and sent to Twitter. If a post is made, it waits one minute to look again, otherwise, it waits 0.01 seconds and goes through the *while* loop looking for birds.
