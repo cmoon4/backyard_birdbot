@@ -140,7 +140,7 @@ while True:
         .
 webcam.release()        
 ```
-This cell is where everything happens. The content inside the `while` loop will be explanined further below, but first we initialize our webcam and set the resolution via cv2. 
+This cell is where everything happens. The content inside the `while` loop will be explanined further below, but first we initialize our webcam and set the resolution via cv2. *cv.VideoCapture()* has an index of 1 instead of 0, because the laptop has two cameras and we need the front-facing one.
 
 The first part within that `while` loop is for acquiring and preparing the image input:
 ```python
