@@ -295,3 +295,5 @@ The biggest challenge has been pointing the laptop in the right direction and cr
 
 The bot is excellent at identifying birds from field guides:
 ![image](https://user-images.githubusercontent.com/39935655/109440718-318fdd80-7a01-11eb-8aa8-b6dec3ad063c.png)
+
+So I'm hopeful that the code's weakness is only with the image acquisition and hardware. 
