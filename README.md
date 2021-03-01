@@ -203,3 +203,33 @@ The converted image is first run through the object detection model. If any of t
 
 If any birds are detected (`num_bird>0`), we crop the acquired image into boxes where the object detection model thinks "Bird"s are. These cropped images (which need to be 224x224) are then used as inputs to the bird species model.
 
+```python
+            img_crop=[]
+            # for each cropped box,
+            for image_index in range(num_bird):
+                # reshape the image into the input format the classification model wants
+                input_img=tf.reshape(cropped_img[image_index],[1,224,224,3])
+                # put the image into the classication model
+                det_out=detector_b(input_img)
+                # which ID # does the model think is most likely?
+                out_idx=np.argmax(det_out["default"].numpy())
+                # and how confident is the model?
+                out_score=np.round(100*np.max(det_out["default"].numpy()),1)
+                # if the score is greater than the minimum thershold:
+                if out_score>=minIdentThresh*100:
+                    # recrop the image here
+                    box_crop=result_bird["boxes"][image_index].numpy()
+                    bird_crop_img=(im_box_crop(frame,box_crop))
+                    # convert it back to cv2 format (BGR)
+                    bird_crop_img = cv.cvtColor(bird_crop_img, cv.COLOR_RGB2BGR)
+                    # save the recropped image for posting
+                    bird_crop_img_filename="Cropped_Bird_{}.jpg".format(image_index)
+                    cv.imwrite(bird_crop_img_filename,bird_crop_img)
+                    # get the bird's common name
+                    temp_df=df_bird[df_bird.id==out_idx]
+                    out_string=temp_df["common_name"].values[0]
+                    # append the name and score to the empty lists
+                    ident_l.append(out_string)
+                    score_l.append(out_score)
+```
+
