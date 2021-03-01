@@ -93,6 +93,7 @@ api = tweepy.API(auth)
 
 This is where we take our first detour. The bird specie classification model outputs a simple probably vector (965 elements long) corresponding to a `background` and 964 bird species. the [labelmap](https://www.gstatic.com/aihub/tfhub/labelmaps/aiy_birds_V1_labelmap.csv) provided by TF Hub looks like this:
 ![image](https://user-images.githubusercontent.com/39935655/109439298-c8f23200-79fb-11eb-926b-c9262cdd1566.png)
+
 where the id matches up to the species. However, names like "Haemorhous cassinii" and "Aramus guarauna" are not useful to someone uneducated in ornithology as me. However, looking up 964 species would not be a very fun task! So we use a separate script to scrape wikipedia for the "common" names of these bird species. *bird_name_wiki_scrape.py* is shown below:
 ```
 import wikipedia as wiki
