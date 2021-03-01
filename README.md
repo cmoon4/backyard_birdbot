@@ -117,7 +117,10 @@ for index in range(1,len(df)):
 # save the results as a .csv file.
 df.to_csv('aiy_birds_V1_labelmap_amended.csv',index=False)
 ```
-This script simply searches Wikipedia using the scientific name (ex: Haemorhous cassinii) and the first result returns the "common" name (Cassin's finch). These names are then stored in a pandas dataset and saved as a separate .csv file. Hence why you can see the loaded label map is the amended file. Back to the main script:
+This script simply searches Wikipedia using the scientific name (ex: Haemorhous cassinii) and the first result returns the "common" name (Cassin's finch). These names are then stored in a pandas dataset and saved as a separate .csv file. The amended .csv file looks like:
+![image](https://user-images.githubusercontent.com/39935655/109440197-51be9d00-79ff-11eb-9ff8-8e635b062645.png)
+
+Hence why you can see the loaded label map is the amended file. Back to the main script:
 
 ```python
 # <codecell> Image acquisition
