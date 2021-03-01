@@ -137,4 +137,25 @@ while True:
         .
 webcam.release()        
 ```
-
+This cell is where everything happens. The content inside the `while` loop will be explanined further below, but first we initialize our webcam and set the resolution via cv2. The first part within that `while` loop is for acquiring and preparing the image input:
+```python
+        #Acquire the image from the webcam
+        check, frame = webcam.read()
+        
+        #get the webcam size
+        height, width, channels = frame.shape
+        scale=25
+        #prepare the crop
+        centerX,centerY=int(height/2),int(width/2)
+        radiusX,radiusY= int(scale*height/100),int(scale*width/100)
+        
+        minX,maxX=centerX-radiusX,centerX+radiusX
+        minY,maxY=centerY-radiusY,centerY+radiusY
+        
+        cropped = frame[minY:maxY, minX:maxX]
+        #print("Image Acquired")
+        frame = cv.cvtColor(cropped, cv.COLOR_BGR2RGB)
+        #display_image(frame)
+        # Convert the frame into a format tensorflow likes
+        converted_img  = tf.image.convert_image_dtype(frame, tf.float32)[tf.newaxis, ...]
+```
