@@ -25,7 +25,6 @@ import tweepy
 import config
 import os
 
-
 from PIL import Image
 from PIL import ImageColor
 from PIL import ImageDraw
