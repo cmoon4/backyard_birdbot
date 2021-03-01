@@ -287,3 +287,5 @@ For each detected "Bird", the cropped image is put through the species identifie
 If any species were successfully identified, the text of the tweet is prepared depending on if a single bird or multiple birds were detected. The images (the entire frame captured by the webcam, and individual crops of where birds are) uploaded and sent to Twitter. If a post is made, it waits one minute to look again, otherwise, it waits 0.01 seconds and goes through the *while* loop looking for birds.
 
 ## Results
+After some tinkering, the code works:
+![image](https://user-images.githubusercontent.com/39935655/109440515-8bdc6e80-7a00-11eb-8007-7a87f60fa593.png)
