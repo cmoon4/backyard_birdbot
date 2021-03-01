@@ -170,8 +170,8 @@ webcam = cv.VideoCapture(1)
 webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
 webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
 # minimum score for the model to register it as a bird
-minThresh=0.1
-minIdentThresh=0.1
+minThresh=0.20
+minIdentThresh=0.20
 counter=0
 while True:
     try:
@@ -280,13 +280,9 @@ while True:
                 if num_bird==1:
                     str_1="I have found a bird! I think it's"
                     str_2=an_or_a(ident_l[0])
-<<<<<<< HEAD
                     combined_str="{} {} {} ({}%)".format(str_1,str_2,*ident_l,str(*score_l))
                     print(combined_str)
-=======
-                    combined_str="{} {} {} ({})%".format(str_1,str_2,*ident_l,str(*score_l))
-                    
->>>>>>> e172eda7c1921df06c188dbe88b9cbf13dd32d45
+
                 # if multiple birds were found
                 else:
                     str_1="I have found"
