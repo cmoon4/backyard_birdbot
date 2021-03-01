@@ -60,7 +60,7 @@ def an_or_a(string):
 ```
 
 We then need to load the actual models themselves, and initialize the Twitter API through tweepy so that we can post
-```
+```python
 # <codecell> Load models
 print('Loading detection/classification models...')
 # for the main image detection model
