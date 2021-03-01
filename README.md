@@ -91,3 +91,31 @@ auth.set_access_token(
 api = tweepy.API(auth)
 ```
 
+This is where we take our first detour. The bird specie classification model outputs a simple probably vector (965 elements long) corresponding to a `background` and 964 bird species. the [labelmap](https://www.gstatic.com/aihub/tfhub/labelmaps/aiy_birds_V1_labelmap.csv) provided by TF Hub looks like this:
+![image](https://user-images.githubusercontent.com/39935655/109439298-c8f23200-79fb-11eb-926b-c9262cdd1566.png)
+where the id matches up to the species. However, names like "Haemorhous cassinii" and "Aramus guarauna" are not useful to someone uneducated in ornithology as me. However, looking up 964 species would not be a very fun task! So we use a separate script to scrape wikipedia for the "common" names of these bird species. *bird_name_wiki_scrape.py* is shown below:
+```
+import wikipedia as wiki
+import pandas as pd
+
+# read the labelmap (downloaded from: https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1)
+df = pd.read_csv('aiy_birds_V1_labelmap.csv')
+# background is background
+df.at[0,'common_name']='background'
+
+# for all the other scientific names in the labelmap,
+for index in range(1,len(df)):
+    # search for the bird in Wikipedia, the first result is the common name.
+    search_out=wiki.search(df.name[index],results=1)
+    # amend the dataframe with the common name
+    df.at[index,'common_name']=search_out[0]
+    # just a progress update
+    if index%10 == 0:
+        print(index,'/',len(df))
+    
+# save the results as a .csv file.
+df.to_csv('aiy_birds_V1_labelmap_amended.csv',index=False)
+```
+This script simply searches Wikipedia using the scientific name (ex: Haemorhous cassinii) and the first result returns the "common" name (Cassin's finch). These names are then stored in a pandas dataset and saved as a separate .csv file.
+
+
