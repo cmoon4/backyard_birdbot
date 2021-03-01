@@ -291,6 +291,14 @@ After some tinkering, the code works:
 
 ![image](https://user-images.githubusercontent.com/39935655/109440515-8bdc6e80-7a00-11eb-8007-7a87f60fa593.png)
 
+![image](https://user-images.githubusercontent.com/39935655/109538535-32bb1c00-7a8e-11eb-9706-6f51df84520c.png)
+
+It has a really hard time seeing sparrows (mostly brown) against the backdrop of seeds, which I think is expected. It sometimes has really bad misses for birds during flight, but sometimes it suprises me by presenting results like this:
+
+![image](https://user-images.githubusercontent.com/39935655/109538701-66964180-7a8e-11eb-9388-1ac85b0d851f.png)
+
+Good job, bot!
+
 The biggest challenge has been pointing the laptop in the right direction and cropping out everything but the bird feeder. An obvious solution would be to install a separate webcam and it can be secured and set to point at the feeder. Another problem seems to be that it can sometimes identify the same bird as multiple birds, resulting in what you can see in the above image, where a single chickadee was identified as two. I belive [non-max supression](https://www.tensorflow.org/api_docs/python/tf/image/non_max_suppression) would be the fix here, but that is yet to be implemented.
 
 The bot is excellent at identifying birds from field guides:
