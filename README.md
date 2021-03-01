@@ -8,7 +8,8 @@ This is a silly hobby project to use existing ML models to:
 This project was my first Python project, so my main goal was to learn more about Python through experience. The entire program is run through *bird_detect.py*.
 
 ## Methods
-As stated, the aim of the project is to use existing ML models to first detect birds then classify what species it belongs to. We won't be training any new models here. For object detection, we use the SSD Openimages v4 model published as part of TensorFlow Object Detection API (https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1). 
+As stated, the aim of the project is to use existing ML models to first detect birds then classify what species it belongs to. We won't be training any new models here. For object detection, we use the SSD Openimages v4 model published as part of TensorFlow Object Detection API (https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1). For classifying bird species, we fortunately have a lightweight bird species classification model also by TensorFlow/Google (https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1). We'll use OpenCV to capture our image and feed it to the models. 
+
 
 ```python
 # <codecell> Importing libraries
