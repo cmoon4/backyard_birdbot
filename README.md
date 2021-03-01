@@ -77,5 +77,17 @@ detector_b=hub.load(module_b_handle).signatures['default']
 # species name.
 df_bird=pd.read_csv('aiy_birds_V1_labelmap_amended.csv')
 print('Models loaded!')
+
+# <codecell> setup twitter api
+
+auth = tweepy.OAuthHandler(
+        config.twitter_auth_keys['consumer_key'],
+        config.twitter_auth_keys['consumer_secret']
+        )
+auth.set_access_token(
+        config.twitter_auth_keys['access_token'],
+        config.twitter_auth_keys['access_token_secret']
+        )
+api = tweepy.API(auth)
 ```
 
