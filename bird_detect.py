@@ -187,7 +187,7 @@ while True:
         cropped = frame[minY:maxY, minX:maxX]
         #print("Image Acquired")
         frame = cv.cvtColor(cropped, cv.COLOR_BGR2RGB)
-        display_image(frame)
+        #display_image(frame)
         # Convert the frame into a format tensorflow likes
         converted_img  = tf.image.convert_image_dtype(frame, tf.float32)[tf.newaxis, ...]
         #channels = tf.unstack (converted_img, axis=-1)
@@ -276,7 +276,7 @@ while True:
                 if num_bird==1:
                     str_1="I have found a bird! I think it's "
                     str_2=an_or_a(ident_l[0])
-                    combined_str="{} {} {}({})%".format(str_1,str_2,*ident_l,str(*score_l))
+                    combined_str="{} {} {} ({})%".format(str_1,str_2,*ident_l,str(*score_l))
                     
                 # if multiple birds were found
                 else:
@@ -287,7 +287,7 @@ while True:
                     for bird_index in range(num_bird):
                         bird_species_str=ident_l[bird_index]
                         bird_score_str=str(score_l[bird_index])
-                        out_string="{}({}%)".format(bird_species_str,bird_score_str)
+                        out_string="{} ({}%)".format(bird_species_str,bird_score_str)
                         bird_out_string.append(out_string)
                     separator=", "
                     combined_str="{} {} {} {}".format(str_1,str_2,str_3,separator.join(bird_out_string))
