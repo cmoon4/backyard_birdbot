@@ -171,6 +171,7 @@ webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
 webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
 # minimum score for the model to register it as a bird
 minThresh=0.20
+# minimum score for the identification model
 minIdentThresh=0.20
 counter=0
 while True:
@@ -310,11 +311,11 @@ while True:
                 key=cv.waitKey(60000)
             else:
                 print("Bird detected but no species identification.")
+		# record frame for future investigation
                 fail_file_name="dud_{}.jpg".format(str(counter))
                 cv.imwrite(fail_file_name,cv.cvtColor(frame,cv.COLOR_RGB2BGR))
                 counter=counter+1
-        # wait 0.1 seconds and loop again
-        #key=cv.waitKey(10)
+
         
     except(KeyboardInterrupt):
         print("Turning off camera.")
