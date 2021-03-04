@@ -22,6 +22,13 @@ from PIL import ImageColor
 from PIL import ImageDraw
 from PIL import ImageFont
 from PIL import ImageOps
+# <codecell> Inputs
+# minimum score for the model to register it as a bird
+minThresh=0.30
+# minimum score for the identification model
+minIdentThresh=0.33
+# tweet cooldown (minutes for the program to wait before tweeting again)
+twt_cd=5
 
 # <codecell> Helper functions (Not all are used, this section could be cleaned up)
 
@@ -169,10 +176,6 @@ key=cv.waitKey(1)
 webcam = cv.VideoCapture(1)
 webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
 webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
-# minimum score for the model to register it as a bird
-minThresh=0.25
-# minimum score for the identification model
-minIdentThresh=0.30
 counter=0
 while True:
     try:
@@ -255,23 +258,26 @@ while True:
                 out_score=np.round(100*np.max(det_out["default"].numpy()),1)
                 # if the score is greater than the minimum thershold:
                 if out_score>=minIdentThresh*100:
-                    # recrop the image here
-                    box_crop=result_bird["boxes"][image_index].numpy()
-                    bird_crop_img=(im_box_crop(frame,box_crop))
-                    # convert it back to cv2 format (BGR)
-                    bird_crop_img = cv.cvtColor(bird_crop_img, cv.COLOR_RGB2BGR)
-                    # save the recropped image for posting
-                    bird_crop_img_filename="Cropped_Bird_{}.jpg".format(image_index)
-                    cv.imwrite(bird_crop_img_filename,bird_crop_img)
                     # get the bird's common name
                     temp_df=df_bird[df_bird.id==out_idx]
                     out_string=temp_df["common_name"].values[0]
-                    # append the name and score to the empty lists
-                    ident_l.append(out_string)
-                    score_l.append(out_score)
-                    # plotting stuff (to be removed)
-                    # temp_str=out_string+" Score:"+str(out_score)
-                    # display_image_title(np.squeeze(input_img.numpy()),temp_str)
+                    
+                    if out_string!="background":
+                        # recrop the image here
+                        box_crop=result_bird["boxes"][image_index].numpy()
+                        bird_crop_img=(im_box_crop(frame,box_crop))
+                        # convert it back to cv2 format (BGR)
+                        bird_crop_img = cv.cvtColor(bird_crop_img, cv.COLOR_RGB2BGR)
+                        # save the recropped image for posting
+                        bird_crop_img_filename="Cropped_Bird_{}.jpg".format(image_index)
+                        cv.imwrite(bird_crop_img_filename,bird_crop_img)
+    
+                        # append the name and score to the empty lists
+                        ident_l.append(out_string)
+                        score_l.append(out_score)
+                        # plotting stuff (to be removed)
+                        # temp_str=out_string+" Score:"+str(out_score)
+                        # display_image_title(np.squeeze(input_img.numpy()),temp_str)
             # if any birds were detected and successfully identified:
                 
             if len(ident_l)>0:     
@@ -311,7 +317,7 @@ while True:
                     os.remove(img_upload_paths[i])
                 
                 print("Tweet posted! Waiting for 1 minute")
-                key=cv.waitKey(60000)
+                key=cv.waitKey(twt_cd*60000)
             else:
                 print("Bird detected but no species identification.")
 		# record frame for future investigation
