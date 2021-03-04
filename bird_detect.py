@@ -15,7 +15,7 @@ import pandas as pd
 import tweepy
 import config
 import os
-
+import time
 
 from PIL import Image
 from PIL import ImageColor
@@ -136,8 +136,8 @@ def draw_boxes(image, boxes, class_names, scores, max_boxes=10, min_score=0.1):
 # <codecell> Load models
 print('Loading detection/classification models...')
 # for the main image detection model
-#module_handle = "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
-module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
+module_handle = "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_resnet_v2/1"
+#module_handle = "https://tfhub.dev/google/openimages_v4/ssd/mobilenet_v2/1"
 
 detector = hub.load(module_handle).signatures['default']
 
@@ -170,9 +170,9 @@ webcam = cv.VideoCapture(1)
 webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
 webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
 # minimum score for the model to register it as a bird
-minThresh=0.20
+minThresh=0.25
 # minimum score for the identification model
-minIdentThresh=0.20
+minIdentThresh=0.30
 counter=0
 while True:
     try:
@@ -198,7 +198,10 @@ while True:
         #channels = tf.unstack (converted_img, axis=-1)
         #converted_img    = tf.stack   ([channels[2], channels[1], channels[0]], axis=-1)
         # Run the image through the model
+        start_time = time.time()
         result = detector(converted_img)
+        end_time = time.time()
+        #print("Inference time: ",end_time-start_time)
         
         # create empty dict 
         result_bird={"names":[],"scores":[],"boxes":[]}
@@ -278,7 +281,7 @@ while True:
                 cv.imwrite(bird_img_filename,frame_bgr)
                 
                 # if a single bird was found
-                if num_bird==1:
+                if len(ident_l)==1:
                     str_1="I have found a bird! I think it's"
                     str_2=an_or_a(ident_l[0])
                     combined_str="{} {} {} ({}%)".format(str_1,str_2,*ident_l,str(*score_l))
@@ -287,10 +290,10 @@ while True:
                 # if multiple birds were found
                 else:
                     str_1="I have found"
-                    str_2=str(num_bird)
+                    str_2=str(len(ident_l))
                     str_3="birds! I think they are:"
                     bird_out_string=[]
-                    for bird_index in range(num_bird):
+                    for bird_index in range(len(ident_l)):
                         bird_species_str=ident_l[bird_index]
                         bird_score_str=str(score_l[bird_index])
                         out_string="{} ({}%)".format(bird_species_str,bird_score_str)
@@ -300,7 +303,7 @@ while True:
                     print(combined_str)
                     
                 img_upload_paths=[bird_img_filename]
-                img_upload_paths.extend(["Cropped_Bird_{}.jpg".format(i) for i in range(num_bird)])
+                img_upload_paths.extend(["Cropped_Bird_{}.jpg".format(i) for i in range(len(ident_l))])
                 img_ids=[api.media_upload(i).media_id_string for i in img_upload_paths]
                 api.update_status(status=combined_str,media_ids=img_ids)
                 
