@@ -24,7 +24,7 @@ from PIL import ImageFont
 from PIL import ImageOps
 # <codecell> Inputs
 # minimum score for the model to register it as a bird
-minThresh=0.30
+minThresh=0.33
 # minimum score for the identification model
 minIdentThresh=0.33
 # tweet cooldown (minutes for the program to wait before tweeting again)
@@ -46,7 +46,7 @@ def im_box_crop(img,box):
     
 def an_or_a(string):
     # a function to determine if the bird name should be prefaced with "a" or "an". Inspired by MIT course 6.0001 material (https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/)
-    an_letters="aefhilmnorsxAEFHILMNORSX"
+    an_letters="aefioxAEILOX"
     char=string[0]
     if char in an_letters:
         output="an"
