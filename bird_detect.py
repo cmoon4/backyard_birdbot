@@ -46,7 +46,7 @@ def im_box_crop(img,box):
     
 def an_or_a(string):
     # a function to determine if the bird name should be prefaced with "a" or "an". Inspired by MIT course 6.0001 material (https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/)
-    an_letters="aefioxAEILOX"
+    an_letters="aeiouxAEIOUX"
     char=string[0]
     if char in an_letters:
         output="an"
