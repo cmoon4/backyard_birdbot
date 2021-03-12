@@ -46,12 +46,12 @@ def im_box_crop(img,box):
     
 def an_or_a(string):
     # a function to determine if the bird name should be prefaced with "a" or "an". Inspired by MIT course 6.0001 material (https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/)
-    an_letters="aeiouxAEIOUX"
-    char=string[0]
+    an_letters = "aeiouxAEIOUX"
+    char = string[0]
     if char in an_letters:
-        output="an"
+        output = "an"
     else:
-        output="a"
+        output = "a"
     return output
 
 # Below are helper functions directly from or inspired by Tensorflow Object Detection API.
@@ -149,12 +149,12 @@ module_handle = "https://tfhub.dev/google/faster_rcnn/openimages_v4/inception_re
 detector = hub.load(module_handle).signatures['default']
 
 # for the secondary bird classification model
-module_b_handle="https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1"
-detector_b=hub.load(module_b_handle).signatures['default']
+module_b_handle = "https://tfhub.dev/google/aiy/vision/classifier/birds_V1/1"
+detector_b = hub.load(module_b_handle).signatures['default']
 
 # we also need to load the labelmap that will correlate the output to the actual
 # species name.
-df_bird=pd.read_csv('aiy_birds_V1_labelmap_amended.csv')
+df_bird = pd.read_csv('aiy_birds_V1_labelmap_amended.csv')
 print('Models loaded!')
 
 # <codecell> setup twitter api
@@ -171,12 +171,12 @@ api = tweepy.API(auth)
 
 # <codecell> Image acquisition
 # Wait a millisecond
-key=cv.waitKey(1)
+key = cv.waitKey(1)
 # Use the front webcam
 webcam = cv.VideoCapture(1)
 webcam.set(cv.CAP_PROP_FRAME_WIDTH, 2560)
 webcam.set(cv.CAP_PROP_FRAME_HEIGHT, 1920)
-counter=0
+counter = 0
 while True:
     try:
         # Acquire the image from the webcam
@@ -186,11 +186,11 @@ while True:
         height, width, channels = frame.shape
         scale=25
         #prepare the crop
-        centerX,centerY=int(height/2),int(width/2)
-        radiusX,radiusY= int(scale*height/100),int(scale*width/130)
+        centerX,centerY = int(height/2),int(width/2)
+        radiusX,radiusY = int(scale*height/100),int(scale*width/130)
         
-        minX,maxX=centerX-radiusX,centerX+radiusX
-        minY,maxY=centerY-radiusY,centerY+radiusY
+        minX,maxX = centerX-radiusX,centerX+radiusX
+        minY,maxY = centerY-radiusY,centerY+radiusY
         
         cropped = frame[minX:maxX, minY:maxY]
         #print("Image Acquired")
